@@ -4,14 +4,27 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/myshkin5/moqueries/moq"
+	"moqueries.org/runtime/moq"
 )
 
-func TestRepeat(t *testing.T) {
-	scene := moq.NewScene(t)
-	tMoq := moq.NewMoqT(scene, nil)
-	tMoqMock := tMoq.Mock()
+type mockT struct {
+	fatalfFormat string
+	fatalfArgs   []interface{}
+	helperCalled int
+}
 
+func (t *mockT) Errorf(string, ...interface{}) {}
+
+func (t *mockT) Fatalf(format string, args ...interface{}) {
+	t.fatalfFormat = format
+	t.fatalfArgs = args
+}
+
+func (t *mockT) Helper() {
+	t.helperCalled++
+}
+
+func TestRepeat(t *testing.T) {
 	tests := map[string]struct {
 		prev         *moq.RepeatVal
 		increment    bool
@@ -276,7 +289,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.MinTimes(6), moq.MinTimes(8)},
 			want:         nil,
 			fatalfFormat: "repeat min of %d conflicts with min of %d",
-			fatalfArgs:   []interface{}{6, 8},
+			fatalfArgs:   []interface{}{6, moq.MinTimer(8)},
 		},
 		"err/conflicting maxes": {
 			prev:         &moq.RepeatVal{},
@@ -284,7 +297,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.MaxTimes(10), moq.MaxTimes(12)},
 			want:         nil,
 			fatalfFormat: "repeat max of %d conflicts with max of %d",
-			fatalfArgs:   []interface{}{10, 12},
+			fatalfArgs:   []interface{}{10, moq.MaxTimer(12)},
 		},
 		"err/conflicting times": {
 			prev:         &moq.RepeatVal{},
@@ -292,7 +305,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.Times(11), moq.Times(13)},
 			want:         nil,
 			fatalfFormat: "repeat times of %d conflicts with times of %d",
-			fatalfArgs:   []interface{}{11, 13},
+			fatalfArgs:   []interface{}{11, moq.Timer(13)},
 		},
 		"err/max then any": {
 			prev:         &moq.RepeatVal{},
@@ -401,28 +414,37 @@ func TestRepeat(t *testing.T) {
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			// ASSEMBLE
+			tMock := &mockT{}
+
+			expectedHelperCalls := 0
 			if test.increment {
-				tMoq.OnCall().Helper().ReturnResults()
-				test.prev.Increment(tMoqMock)
-			}
-			if test.fatalfFormat != "" {
-				tMoq.OnCall().Fatalf(test.fatalfFormat, test.fatalfArgs...).ReturnResults()
+				expectedHelperCalls++
+				test.prev.Increment(tMock)
 			}
 
 			// ACT
 			if test.repeaters != nil {
-				tMoq.OnCall().Helper().ReturnResults()
-				test.prev.Repeat(tMoqMock, test.repeaters)
+				expectedHelperCalls++
+				test.prev.Repeat(tMock, test.repeaters)
 			}
 
 			// ASSERT
-			scene.AssertExpectationsMet()
-
+			if expectedHelperCalls != tMock.helperCalled {
+				t.Errorf("got %d helper calls, want %d", tMock.helperCalled, expectedHelperCalls)
+			}
+			if test.fatalfFormat != "" {
+				if test.fatalfFormat != tMock.fatalfFormat {
+					t.Errorf("got %s fatalf format, want %s", tMock.fatalfFormat, test.fatalfFormat)
+				}
+				if !reflect.DeepEqual(test.fatalfArgs, tMock.fatalfArgs) {
+					t.Errorf("got %#v fatalf args, want %#v", tMock.fatalfArgs, test.fatalfArgs)
+				}
+			}
 			// if test.want is nil, we are testing an error so don't check that
 			// test.prev was updated
 			if test.want != nil {
 				if !reflect.DeepEqual(test.prev, test.want) {
-					t.Errorf("Wanted %#v, got %#v", test.want, test.prev)
+					t.Errorf("got %#v, want %#v", test.prev, test.want)
 				}
 			}
 		})

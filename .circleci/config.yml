@@ -21,18 +21,6 @@ jobs:
     - run: mkdir -p $TEST_RESULTS
 
     - run:
-        name: Generate code
-
-        command: |
-          set -ux
-          find . -name moq_\*.go -delete
-          go build -o $GOPATH/bin/moqueries github.com/myshkin5/moqueries
-          export MOQ_BULK_STATE_FILE=$(mktemp --tmpdir= moq-XXXXXX)
-          moqueries bulk-initialize
-          go generate ./...
-          MOQ_DEBUG=true moqueries bulk-finalize
-
-    - run:
         name: Run tests
 
         command: |
@@ -42,20 +30,6 @@ jobs:
             -race -covermode=atomic -coverprofile=coverage.out $PACKAGE_NAMES
           go install golang.org/x/vuln/cmd/govulncheck@latest
           govulncheck ./...
-
-    - run:
-        name: Check generated code
-
-        command: |
-          set -ux
-          # fail if working directory is dirty
-          # Note: We check after Generate code *and* Run tests because some
-          #   tests generate mocks too.
-          git status --short
-          if [[ -n $(git status --short) ]]; then
-            echo "Working directory dirty"
-            exit 1
-          fi
 
     - codecov/upload
 

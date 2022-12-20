@@ -3,82 +3,90 @@ package moq_test
 import (
 	"testing"
 
-	"github.com/myshkin5/moqueries/moq"
+	"moqueries.org/runtime/moq"
 )
+
+type mockMoq struct {
+	resetCalled                 int
+	assertExpectationsMetCalled int
+}
+
+func (m *mockMoq) Reset() {
+	m.resetCalled++
+}
+
+func (m *mockMoq) AssertExpectationsMet() {
+	m.assertExpectationsMetCalled++
+}
 
 func TestScene(t *testing.T) {
 	var (
-		scene *moq.Scene
-		moq1  *moqMoq
-		moq2  *moqMoq
-		tMoq  *moq.MoqT
-		moqT  moq.T
+		moq1 *mockMoq
+		moq2 *mockMoq
+		moqT *mockT
 
 		testScene *moq.Scene
 	)
 
 	beforeEach := func(t *testing.T) {
 		t.Helper()
-		if scene != nil {
-			t.Fatal("afterEach not called")
-		}
-		scene = moq.NewScene(t)
-		moq1 = newMoqMoq(scene, nil)
-		moq2 = newMoqMoq(scene, nil)
-		tMoq = moq.NewMoqT(scene, nil)
-		moqT = tMoq.Mock()
+
+		moq1 = &mockMoq{}
+		moq2 = &mockMoq{}
+		moqT = &mockT{}
 
 		testScene = moq.NewScene(moqT)
-		testScene.AddMoq(moq1.mock())
-		testScene.AddMoq(moq2.mock())
-	}
-
-	afterEach := func(t *testing.T) {
-		t.Helper()
-		scene.AssertExpectationsMet()
-		scene = nil
+		testScene.AddMoq(moq1)
+		testScene.AddMoq(moq2)
 	}
 
 	t.Run("resets all of its moqs", func(t *testing.T) {
 		// ASSEMBLE
 		beforeEach(t)
-		defer afterEach(t)
-
-		moq1.onCall().Reset().returnResults()
-		moq2.onCall().Reset().returnResults()
 
 		// ACT
 		testScene.Reset()
 
 		// ASSERT
+		if moq1.resetCalled != 1 {
+			t.Errorf("got %d reset calls, want 1", moq1.resetCalled)
+		}
+		if moq2.resetCalled != 1 {
+			t.Errorf("got %d reset calls, want 1", moq2.resetCalled)
+		}
 	})
 
 	t.Run("asserts all of its moqs meet expectations", func(t *testing.T) {
 		// ASSEMBLE
 		beforeEach(t)
-		defer afterEach(t)
-
-		tMoq.OnCall().Helper().ReturnResults()
-		moq1.onCall().AssertExpectationsMet().returnResults()
-		moq2.onCall().AssertExpectationsMet().returnResults()
 
 		// ACT
 		testScene.AssertExpectationsMet()
 
 		// ASSERT
+		if moqT.helperCalled != 1 {
+			t.Errorf("got %d helper calls, want 1", moqT.helperCalled)
+		}
+		if moq1.assertExpectationsMetCalled != 1 {
+			t.Errorf("got %d assert expectations met calls, want 1",
+				moq1.assertExpectationsMetCalled)
+		}
+		if moq2.assertExpectationsMetCalled != 1 {
+			t.Errorf("got %d assert expectations met calls, want 1",
+				moq2.assertExpectationsMetCalled)
+		}
 	})
 
 	t.Run("returns the same MoqT it is given", func(t *testing.T) {
 		// ASSEMBLE
 		beforeEach(t)
-		defer afterEach(t)
 
 		// ACT
 		actualMoqT := testScene.T
 
 		// ASSERT
 		if actualMoqT != moqT {
-			t.Errorf("got %#v, wanted %#v", actualMoqT, moqT)
+			t.Errorf("got %#v, want %#v", actualMoqT, moqT)
 		}
 	})
 }

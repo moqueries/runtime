@@ -1,8 +1,6 @@
 package moq
 
-import (
-	"github.com/myshkin5/moqueries/logs"
-)
+import "moqueries.org/runtime/logs"
 
 // Repeater is implemented by all repeaters
 type Repeater interface {

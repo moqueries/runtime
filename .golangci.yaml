@@ -38,15 +38,13 @@ linters-settings:
     sections:
     - standard
     - default
-    - prefix(github.com/myshkin5/moqueries)
+    - prefix(moqueries.org/runtime)
   revive:
     rules:
     - name: var-naming
       arguments:
       - ["ID"]
   stylecheck:
-    dot-import-whitelist:
-    - "github.com/myshkin5/moqueries/ast"
     initialisms:
     - "-ID"
 
