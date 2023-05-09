@@ -4,8 +4,6 @@ package hash
 
 import "moqueries.org/deephash"
 
-const hashBytes = 8
-
 // Hash stores the hash of a source object
 type Hash uint64
 
