@@ -2,11 +2,7 @@
 // used as a key in hash maps
 package hash
 
-import (
-	"encoding/binary"
-
-	"github.com/davegardnerisme/deephash"
-)
+import "moqueries.org/deephash"
 
 const hashBytes = 8
 
@@ -15,11 +11,5 @@ type Hash uint64
 
 // DeepHash walks the src parameter and produces a hash
 func DeepHash(src interface{}) Hash {
-	b := deephash.Hash(src)
-	if len(b) < hashBytes {
-		newB := make([]byte, hashBytes)
-		copy(newB, b)
-		b = newB
-	}
-	return Hash(binary.LittleEndian.Uint64(b))
+	return Hash(deephash.Hash(src))
 }
