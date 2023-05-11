@@ -11,3 +11,8 @@ type Hash uint64
 func DeepHash(src interface{}) Hash {
 	return Hash(deephash.Hash(src))
 }
+
+// DeepDiff returns a list of differences between lSrc and rSrc
+func DeepDiff(lSrc, rSrc interface{}) []string {
+	return deephash.Diff("", lSrc, rSrc)
+}
