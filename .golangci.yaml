@@ -39,12 +39,23 @@ linters-settings:
     - standard
     - default
     - prefix(moqueries.org/runtime)
+  depguard:
+    rules:
+      main:
+        list-mode: strict
+        allow:
+        - $gostd
+        - moqueries.org/deephash
+        - moqueries.org/runtime
   revive:
     rules:
     - name: var-naming
-      arguments:
-      - ["ID"]
+      disabled: true
   stylecheck:
+    checks:
+    - "all"
+    - "-ST1000"
+    - "-ST1003"
     initialisms:
     - "-ID"
 
@@ -58,10 +69,6 @@ issues:
     - gocritic
     - goerr113
     - nestif
-  # No easy way to break up go:generate lines
-  - linters:
-    - lll
-    source: "^//go:generate "
   - path: 'testpkg'
     linters:
     - deadcode

@@ -10,15 +10,11 @@ type Scene struct {
 	nextMockSeq     uint32
 }
 
-//go:generate moqueries Moq
-
 // Moq is implemented by all moqs so that they can integrate with a scene
 type Moq interface {
 	Reset()
 	AssertExpectationsMet()
 }
-
-//go:generate moqueries --destination moq_testing.go --export T
 
 // T is the interface defining standard library *testing.T methods used by
 // Moqueries
