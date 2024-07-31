@@ -165,7 +165,6 @@ func (r *Recorder[A, P, K, R]) IsAnyPermitted(exported bool) bool {
 // AnyParam records that a parameter should not be used when recording an
 // expectation and that the parameter should also not be used to find results
 func (r *Recorder[A, P, K, R]) AnyParam(n int) {
-	// TODO check n < 32? 64? Maybe there's a overflow panic with clear output?
 	r.AnyParams |= 1 << n
 }
 
@@ -334,7 +333,7 @@ func (r *Recorder[A, P, K, R]) findResults() {
 	var results *ResultsByParams[P, K, R]
 	for n, res := range r.Moq.ResultsByParams {
 		if res.AnyParams == r.AnyParams {
-			results = &res
+			results = &r.Moq.ResultsByParams[n]
 			break
 		}
 		if res.AnyCount > anyCount {

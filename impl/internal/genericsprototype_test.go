@@ -201,7 +201,9 @@ func (r *MoqGenerics_Usual_recorder[S, B, R, E]) NoSeq() *MoqGenerics_Usual_reco
 	return r
 }
 
-func (r *MoqGenerics_Usual_recorder[S, B, R, E]) ReturnResults(sResult R, err E) *MoqGenerics_Usual_recorder[S, B, R, E] {
+func (r *MoqGenerics_Usual_recorder[S, B, R, E]) ReturnResults(
+	sResult R, err E,
+) *MoqGenerics_Usual_recorder[S, B, R, E] {
 	r.Recorder.Moq.Scene.T.Helper()
 	r.Recorder.ReturnResults(MoqGenerics_Usual_results[S, B, R, E]{
 		SResult: sResult,
@@ -210,7 +212,9 @@ func (r *MoqGenerics_Usual_recorder[S, B, R, E]) ReturnResults(sResult R, err E)
 	return r
 }
 
-func (r *MoqGenerics_Usual_recorder[S, B, R, E]) AndDo(fn MoqGenerics_Usual_doFn[S, B, R, E]) *MoqGenerics_Usual_recorder[S, B, R, E] {
+func (r *MoqGenerics_Usual_recorder[S, B, R, E]) AndDo(
+	fn MoqGenerics_Usual_doFn[S, B, R, E],
+) *MoqGenerics_Usual_recorder[S, B, R, E] {
 	r.Recorder.Moq.Scene.T.Helper()
 	if !r.Recorder.AndDo(func(params MoqGenerics_Usual_params[S, B, R, E]) {
 		fn(params.SParam, params.BParam)
@@ -220,7 +224,9 @@ func (r *MoqGenerics_Usual_recorder[S, B, R, E]) AndDo(fn MoqGenerics_Usual_doFn
 	return r
 }
 
-func (r *MoqGenerics_Usual_recorder[S, B, R, E]) DoReturnResults(fn MoqGenerics_Usual_doReturnFn[S, B, R, E]) *MoqGenerics_Usual_recorder[S, B, R, E] {
+func (r *MoqGenerics_Usual_recorder[S, B, R, E]) DoReturnResults(
+	fn MoqGenerics_Usual_doReturnFn[S, B, R, E],
+) *MoqGenerics_Usual_recorder[S, B, R, E] {
 	r.Recorder.Moq.Scene.T.Helper()
 	r.Recorder.DoReturnResults(func(params MoqGenerics_Usual_params[S, B, R, E]) *MoqGenerics_Usual_results[S, B, R, E] {
 		sResult, err := fn(params.SParam, params.BParam)
@@ -232,7 +238,9 @@ func (r *MoqGenerics_Usual_recorder[S, B, R, E]) DoReturnResults(fn MoqGenerics_
 	return r
 }
 
-func (r *MoqGenerics_Usual_recorder[S, B, R, E]) Repeat(repeaters ...moq.Repeater) *MoqGenerics_Usual_recorder[S, B, R, E] {
+func (r *MoqGenerics_Usual_recorder[S, B, R, E]) Repeat(
+	repeaters ...moq.Repeater,
+) *MoqGenerics_Usual_recorder[S, B, R, E] {
 	r.Recorder.Moq.Scene.T.Helper()
 	if !r.Recorder.Repeat(repeaters, true) {
 		return nil
@@ -244,7 +252,9 @@ func (*MoqGenerics_Usual_adaptor[S, B, R, E]) PrettyParams(params MoqGenerics_Us
 	return fmt.Sprintf("Usual(%#v, %#v)", params.SParam, params.BParam)
 }
 
-func (a *MoqGenerics_Usual_adaptor[S, B, R, E]) ParamsKey(params MoqGenerics_Usual_params[S, B, R, E], anyParams uint64) MoqGenerics_Usual_paramsKey[S, B, R, E] {
+func (a *MoqGenerics_Usual_adaptor[S, B, R, E]) ParamsKey(
+	params MoqGenerics_Usual_params[S, B, R, E], anyParams uint64,
+) MoqGenerics_Usual_paramsKey[S, B, R, E] {
 	a.Moq.Moq_Usual.Scene.T.Helper()
 	sParamUsedHash := impl.HashOnlyParamKey(a.Moq.Moq_Usual.Scene.T,
 		params.SParam, "sParam", 0, a.Moq.Runtime.ParameterIndexing.Usual.SParam, anyParams)

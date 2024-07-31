@@ -406,10 +406,12 @@ func (r *MoqUsual_Nothing_recorder) Repeat(repeaters ...moq.Repeater) *MoqUsual_
 }
 
 func (*MoqUsual_Nothing_adaptor) PrettyParams(params MoqUsual_Nothing_params) string {
-	return fmt.Sprintf("Nothing()")
+	return "Nothing()"
 }
 
-func (a *MoqUsual_Nothing_adaptor) ParamsKey(params MoqUsual_Nothing_params, anyParams uint64) MoqUsual_Nothing_paramsKey {
+func (a *MoqUsual_Nothing_adaptor) ParamsKey(
+	params MoqUsual_Nothing_params, anyParams uint64,
+) MoqUsual_Nothing_paramsKey {
 	a.Moq.Moq_Nothing.Scene.T.Helper()
 	return MoqUsual_Nothing_paramsKey{
 		Params: struct{}{},
