@@ -1,6 +1,6 @@
 module moqueries.org/runtime
 
-go 1.18
+go 1.19
 
 require moqueries.org/deephash v0.26.0
 
