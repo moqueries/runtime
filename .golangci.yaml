@@ -58,10 +58,6 @@ issues:
     - gocritic
     - goerr113
     - nestif
-  # No easy way to break up go:generate lines
-  - linters:
-    - lll
-    source: "^//go:generate "
   - path: 'testpkg'
     linters:
     - deadcode
