@@ -1,4 +1,4 @@
-golang.org/x/text v0.23.0 h1:D71I7dUrlY+VX0gQShAThNGHFxZ13dGLBHQLVl1mJlY=
-golang.org/x/text v0.23.0/go.mod h1:/BLNzu4aZCJ1+kcD0DNRotWKage4q2rGVAg4o22unh4=
+golang.org/x/text v0.43.0 h1:1QivrlhwAsnMOcqgOdl9my7s9OyZl8O5/UGUTJVXoWc=
+golang.org/x/text v0.43.0/go.mod h1:hbSIYA/amXcRXTFSZqh8tWHEoqRvvbKPJ2uz/KU+a+s=
 moqueries.org/deephash v0.26.0 h1:KvMnNvb/N9lId0OOO1X6Yp2BifVuDuJJQH3epAeF178=
 moqueries.org/deephash v0.26.0/go.mod h1:brwHe2Ks78ZEA1xIgUTEy0gtZfO7tJTqXT9haTdIRNE=
