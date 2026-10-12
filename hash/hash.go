@@ -8,11 +8,11 @@ import "moqueries.org/deephash"
 type Hash uint64
 
 // DeepHash walks the src parameter and produces a hash
-func DeepHash(src interface{}) Hash {
+func DeepHash(src any) Hash {
 	return Hash(deephash.Hash(src))
 }
 
 // DeepDiff returns a list of differences between lSrc and rSrc
-func DeepDiff(lSrc, rSrc interface{}) []string {
+func DeepDiff(lSrc, rSrc any) []string {
 	return deephash.Diff("", lSrc, rSrc)
 }

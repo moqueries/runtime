@@ -6,6 +6,6 @@ import (
 )
 
 // FnString returns a string representing a function for use in error reporting
-func FnString(fn interface{}) string {
+func FnString(fn any) string {
 	return runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name()
 }

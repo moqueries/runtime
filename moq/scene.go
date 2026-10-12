@@ -19,8 +19,8 @@ type Moq interface {
 // T is the interface defining standard library *testing.T methods used by
 // Moqueries
 type T interface {
-	Errorf(format string, args ...interface{})
-	Fatalf(format string, args ...interface{})
+	Errorf(format string, args ...any)
+	Fatalf(format string, args ...any)
 	Helper()
 }
 

@@ -1,82 +1,89 @@
+version: "2"
 linters:
-  enable-all: true
+  default: all
   disable:
-  - cyclop
-  - gocognit
-  - depguard
-  - dogsled
-  - errorlint
-  - exhaustivestruct
-  - exhaustruct
-  - funlen
-  - importas
-  - interfacer
-  - intrange
-  - ireturn
-  - gochecknoglobals
-  - gochecknoinits
-  - godot
-  - maintidx
-  - maligned
-  - nlreturn
-  - nosnakecase
-  - paralleltest
-  - prealloc
-  - predeclared
-  - scopelint
-  - tagliatelle
-  - varnamelen
-  - wsl
+    - cyclop
+    - depguard
+    - dogsled
+    - errorlint
+    - exhaustruct
+    - exhaustruct_v5
+    - funlen
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - godot
+    - importas
+    - intrange
+    - ireturn
+    - maintidx
+    - nlreturn
+    - paralleltest
+    - prealloc
+    - predeclared
+    - tagliatelle
+    - varnamelen
+    - wsl
+    - wsl_v5
 
-  # Consider enabling
-  - gocyclo
-  - wrapcheck
-
-  # Usually disabled but useful for checking everything has godoc
-  - golint
-
-linters-settings:
-  gci:
-    sections:
-    - standard
-    - default
-    - prefix(moqueries.org/runtime)
-  depguard:
+    # Consider enabling
+    - gocyclo
+    - wrapcheck
+  settings:
+    depguard:
+      rules:
+        main:
+          list-mode: strict
+          allow:
+            - $gostd
+            - moqueries.org/deephash
+            - moqueries.org/runtime
+    revive:
+      rules:
+        - name: var-naming
+          disabled: true
+    staticcheck:
+      checks:
+        - all
+        - -ST1000
+        - -ST1003
+      initialisms:
+        - -ID
+  exclusions:
+    generated: lax
     rules:
-      main:
-        list-mode: strict
-        allow:
-        - $gostd
-        - moqueries.org/deephash
-        - moqueries.org/runtime
-  revive:
-    rules:
-    - name: var-naming
-      disabled: true
-  stylecheck:
-    checks:
-    - "all"
-    - "-ST1000"
-    - "-ST1003"
-    initialisms:
-    - "-ID"
-
-issues:
-  exclude-use-default: false
-  exclude-rules:
-  - path: '(.+)_test.go'
-    linters:
-    - forcetypeassert
-    - goconst
-    - gocritic
-    - goerr113
-    - nestif
-  - path: 'testpkg'
-    linters:
-    - deadcode
-    - revive
-    - stylecheck
-    - unused
-  include:
-  # disable excluding of issues about comments from golint.
-  - EXC0002
+      - linters:
+          - err113
+          - forcetypeassert
+          - goconst
+          - gocritic
+          - nestif
+        path: (.+)_test.go
+      - linters:
+          - deadcode
+          - revive
+          - staticcheck
+          - unused
+        path: testpkg
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(moqueries.org/runtime)
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

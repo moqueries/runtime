@@ -9,13 +9,13 @@ import (
 
 type mockT struct {
 	fatalfFormat string
-	fatalfArgs   []interface{}
+	fatalfArgs   []any
 	helperCalled int
 }
 
-func (t *mockT) Errorf(string, ...interface{}) {}
+func (t *mockT) Errorf(string, ...any) {}
 
-func (t *mockT) Fatalf(format string, args ...interface{}) {
+func (t *mockT) Fatalf(format string, args ...any) {
 	t.fatalfFormat = format
 	t.fatalfArgs = args
 }
@@ -31,7 +31,7 @@ func TestRepeat(t *testing.T) {
 		repeaters    []moq.Repeater
 		want         *moq.RepeatVal
 		fatalfFormat string
-		fatalfArgs   []interface{}
+		fatalfArgs   []any
 	}{
 		"default": {
 			prev:      &moq.RepeatVal{},
@@ -289,7 +289,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.MinTimes(6), moq.MinTimes(8)},
 			want:         nil,
 			fatalfFormat: "repeat min of %d conflicts with min of %d",
-			fatalfArgs:   []interface{}{6, moq.MinTimer(8)},
+			fatalfArgs:   []any{6, moq.MinTimer(8)},
 		},
 		"err/conflicting maxes": {
 			prev:         &moq.RepeatVal{},
@@ -297,7 +297,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.MaxTimes(10), moq.MaxTimes(12)},
 			want:         nil,
 			fatalfFormat: "repeat max of %d conflicts with max of %d",
-			fatalfArgs:   []interface{}{10, moq.MaxTimer(12)},
+			fatalfArgs:   []any{10, moq.MaxTimer(12)},
 		},
 		"err/conflicting times": {
 			prev:         &moq.RepeatVal{},
@@ -305,7 +305,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.Times(11), moq.Times(13)},
 			want:         nil,
 			fatalfFormat: "repeat times of %d conflicts with times of %d",
-			fatalfArgs:   []interface{}{11, moq.Timer(13)},
+			fatalfArgs:   []any{11, moq.Timer(13)},
 		},
 		"err/max then any": {
 			prev:         &moq.RepeatVal{},
@@ -313,7 +313,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.MaxTimes(14), moq.AnyTimes()},
 			want:         nil,
 			fatalfFormat: "max of %d conflicts with moq.AnyTimes",
-			fatalfArgs:   []interface{}{14},
+			fatalfArgs:   []any{14},
 		},
 		"err/any then max": {
 			prev:         &moq.RepeatVal{},
@@ -321,7 +321,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.AnyTimes(), moq.MaxTimes(16)},
 			want:         nil,
 			fatalfFormat: "max of %d conflicts with moq.AnyTimes",
-			fatalfArgs:   []interface{}{16},
+			fatalfArgs:   []any{16},
 		},
 		"err/times then min": {
 			prev:         &moq.RepeatVal{},
@@ -329,7 +329,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.Times(14), moq.MinTimes(15)},
 			want:         nil,
 			fatalfFormat: "min of %d conflicts with times %d",
-			fatalfArgs:   []interface{}{15, 14},
+			fatalfArgs:   []any{15, 14},
 		},
 		"err/min then times": {
 			prev:         &moq.RepeatVal{},
@@ -337,7 +337,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.MinTimes(15), moq.Times(16)},
 			want:         nil,
 			fatalfFormat: "min of %d conflicts with times %d",
-			fatalfArgs:   []interface{}{15, 16},
+			fatalfArgs:   []any{15, 16},
 		},
 		"err/times then max": {
 			prev:         &moq.RepeatVal{},
@@ -345,7 +345,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.Times(14), moq.MaxTimes(15)},
 			want:         nil,
 			fatalfFormat: "max of %d conflicts with times %d",
-			fatalfArgs:   []interface{}{15, 14},
+			fatalfArgs:   []any{15, 14},
 		},
 		"err/max then times": {
 			prev:         &moq.RepeatVal{},
@@ -353,7 +353,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.MaxTimes(15), moq.Times(16)},
 			want:         nil,
 			fatalfFormat: "max of %d conflicts with times %d",
-			fatalfArgs:   []interface{}{15, 16},
+			fatalfArgs:   []any{15, 16},
 		},
 		"err/min then small max": {
 			prev:         &moq.RepeatVal{},
@@ -361,7 +361,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.MinTimes(18), moq.MaxTimes(9)},
 			want:         nil,
 			fatalfFormat: "max of %d is less than min of %d",
-			fatalfArgs:   []interface{}{9, 18},
+			fatalfArgs:   []any{9, 18},
 		},
 		"err/min prev small max": {
 			prev: &moq.RepeatVal{
@@ -375,7 +375,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.MinTimes(18)},
 			want:         nil,
 			fatalfFormat: "max of %d is less than min of %d",
-			fatalfArgs:   []interface{}{9, 18},
+			fatalfArgs:   []any{9, 18},
 		},
 		"err/max then large min": {
 			prev:         &moq.RepeatVal{},
@@ -383,7 +383,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.MaxTimes(10), moq.MinTimes(20)},
 			want:         nil,
 			fatalfFormat: "max of %d is less than min of %d",
-			fatalfArgs:   []interface{}{10, 20},
+			fatalfArgs:   []any{10, 20},
 		},
 		"err/min then optional": {
 			prev:         &moq.RepeatVal{},
@@ -391,7 +391,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.MinTimes(15), moq.Optional()},
 			want:         nil,
 			fatalfFormat: "min of %d conflicts with moq.Optional",
-			fatalfArgs:   []interface{}{15},
+			fatalfArgs:   []any{15},
 		},
 		"err/optional then min": {
 			prev:         &moq.RepeatVal{},
@@ -399,7 +399,7 @@ func TestRepeat(t *testing.T) {
 			repeaters:    []moq.Repeater{moq.Optional(), moq.MinTimes(15)},
 			want:         nil,
 			fatalfFormat: "min of %d conflicts with moq.Optional",
-			fatalfArgs:   []interface{}{15},
+			fatalfArgs:   []any{15},
 		},
 		"err/forgot to increment": {
 			prev:         &moq.RepeatVal{},
