@@ -32,14 +32,14 @@ func IsDebug() bool {
 }
 
 // Debugf logs a formatted debugging message if debug logs are configured
-func Debugf(format string, args ...interface{}) {
+func Debugf(format string, args ...any) {
 	if debug {
 		debugLogger.Printf(format, args...)
 	}
 }
 
 // Infof logs a formatted informational message
-func Infof(format string, args ...interface{}) {
+func Infof(format string, args ...any) {
 	log.Printf(format, args...)
 }
 
@@ -49,7 +49,7 @@ func Warn(msg string) {
 }
 
 // Warnf logs a formatted warning message
-func Warnf(format string, args ...interface{}) {
+func Warnf(format string, args ...any) {
 	warnLogger.Printf(format, args...)
 }
 
@@ -59,7 +59,7 @@ func Error(msg string, err error) {
 }
 
 // Errorf logs a formatted error message
-func Errorf(format string, args ...interface{}) {
+func Errorf(format string, args ...any) {
 	errLogger.Printf(format, args...)
 }
 
@@ -69,6 +69,6 @@ func Panic(msg string, err error) {
 }
 
 // Panicf logs a formatted message then panics
-func Panicf(format string, args ...interface{}) {
+func Panicf(format string, args ...any) {
 	log.Panicf(format, args...)
 }

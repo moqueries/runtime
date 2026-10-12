@@ -11,7 +11,6 @@ func TestFnString(t *testing.T) {
 	fn := func(string) error { return nil }
 
 	// ACT
-	// nolint: ifshort, nolintlint // section separation
 	out := moq.FnString(fn)
 
 	// ASSERT
